@@ -1,8 +1,51 @@
-nav{
+ nav{
     padding: 23px 6%;
     border-bottom: 1px solid #E5E5E5;
     position: relative;
-}
+
+} 
+
+
+
+/* nav {
+    padding: 23px 6%;
+    border-bottom: 1px solid #E5E5E5;
+    position: fixed; 
+    width: 100%;
+    z-index: 1000; 
+    background-color: #fff;
+    font-weight: 900;  
+    animation: fadeIn 0.5s ease-in-out;  
+} */
+
+ 
+/* @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .nav-top{
     display: flex;
     justify-content: space-between;
