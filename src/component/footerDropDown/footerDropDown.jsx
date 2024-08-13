@@ -1,31 +1,33 @@
-import "./footerDropDown.css"
-import arrow from "../../assets/arrow-down.png"
-import { useState } from "react"
+import "./footerDropDown.css";
+import arrow from "../../assets/arrow-down.png";
+import { useState } from "react";
 
-export default function FooterDropDown({item}){
-    const [arrowDown, setArrowDown] = useState(true)
+export default function FooterDropDown({ item }) {
+    const [isOpen, setIsOpen] = useState(false);
 
-    const arrowClickHandler = ()=>{
-        setArrowDown((state)=>!state)
-    }
+    const toggleDropdown = () => {
+        setIsOpen(prevState => !prevState);
+    };
 
-    return <div className="row" >
-            <div className="row-top">
+    return (
+        <div className="row">
+            <div className="row-top" onClick={toggleDropdown}>
                 <h3>{item.title}</h3>
-                {
-                    arrowDown ? <img className="footer-arrow-down" src={arrow} alt="icon" onClick={arrowClickHandler}/> : 
-                    <img className="footer-arrow-up" src={arrow} alt="icon" onClick={arrowClickHandler}/>
-                }           
+                <img
+                    className={`footer-arrow ${isOpen ? 'footer-arrow-up' : 'footer-arrow-down'}`}
+                    src={arrow}
+                    alt="Toggle Dropdown"
+                />
             </div>
-            <div className="row-bottom">
-                {
-                   !arrowDown ? <div className="footer-row-select">
-                   {
-                      item.data.map((elm,idx)=><span key={idx}>{elm}</span>)
-                   }
-              </div>  : null
-                }
-            
-            </div>
-           </div>  
+            {!isOpen && (
+                <div className="row-bottom">
+                    <div className="footer-row-select">
+                        {item.data.map((elm, idx) => (
+                            <span key={idx}>{elm}</span>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 }

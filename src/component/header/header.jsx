@@ -1,10 +1,21 @@
-import "./header.css"
-import logo1 from "../../assets/logo1.png"
+import "./header.css";
+import logo1 from "../../assets/logo1.png";
 
-export default function Header(){
-    return <header>
-        <span className="d-none"><img src={`${logo1}`} alt="" /> Lorem ipsum dolor</span>
-        <span><img src={`${logo1}`} alt="" /> Lorem ipsum dolor</span>
-        <span className="d-none"><img src={`${logo1}`} alt="" /> Lorem ipsum dolor</span>
-    </header>
+export default function Header() {
+    return (
+        <header>
+            <span className="header-item">
+                <img src={logo1} alt="Logo" />
+                Lorem ipsum dolor
+            </span>
+            <span className="header-item">
+                <img src={logo1} alt="Logo" />
+                Lorem ipsum dolor
+            </span>
+            <span className="header-item d-none">
+                <img src={logo1} alt="Logo" />
+                Lorem ipsum dolor
+            </span>
+        </header>
+    );
 }

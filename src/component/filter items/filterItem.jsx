@@ -1,105 +1,99 @@
-import "./filterItem.css"
-import arrowLeft from "../../assets/arrow-left.png"
-import { useEffect, useState } from "react"
-import axios from "axios"
-import { useDispatch } from "react-redux"
-import { productDataAction } from "../../store/store"
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { productDataAction } from "../../store/store";
+import "./filterItem.css";
+import arrowLeft from "../../assets/arrow-left.png";
+
 export default function FilterItem({ item }) {
-    const dispatch = useDispatch()
-    const [arrowDown, setArrowDown] = useState(true)
-    const [selectItem, setSelectItem] = useState([{ name: 'Men', selected: false }, { name: 'Women', selected: false }, { name: 'Baby & Kids', selected: false }])
-
-    const unselectHandler = () => {
-        setSelectItem([{ name: 'Men', selected: false }, { name: 'Women', selected: false }, { name: 'Baby & Kids', selected: false }]);
-        const getAllCategories = async () => {
-            const { data } = await axios.get("https://fakestoreapi.com/products")
-            dispatch(productDataAction.updateData(data))
-        }
-        getAllCategories();
-    }
-
-    const [selectedArr, setSelectedArr] = useState([])
+    const dispatch = useDispatch();
+    const [isArrowDown, setIsArrowDown] = useState(true);
+    const [selectItems, setSelectItems] = useState([
+        { name: 'Men', selected: false },
+        { name: 'Women', selected: false },
+        { name: 'Baby & Kids', selected: false }
+    ]);
 
     useEffect(() => {
-        const newselectedArr = selectItem.filter((item) => item.selected == true)
-        setSelectedArr(newselectedArr)
-    }, [selectItem])
+        // Fetch data based on the current selection
+        const selectedCategories = selectItems.filter(i => i.selected).map(i => i.name.toLowerCase());
 
-    useEffect(() => {
-        const getDataByCategory = async () => {
-            const newProductData = [];
-             
-            for (let i = 0; i < selectedArr.length; i++) {
-                if (selectedArr[i].name == 'Men') {
-                    try {
-                        const { data } = await axios.get("https://fakestoreapi.com/products/category/men's clothing");
-                        
-                        newProductData.push(...data)
-                    } catch (error) {
-                        console.error('Error fetching data:', error);
-                    }
-                }
-                else if (selectedArr[i].name == 'Women') {
-                    try {
-                        const { data } = await axios.get("https://fakestoreapi.com/products/category/women's clothing");
-                        // console.log("woment data...",data);
-                        newProductData.push(...data)
-                    } catch (error) {
-                        console.error('Error fetching data:', error);
-                    }
-                }
-            }
-            // }      
-            if (newProductData.length != 0) {
-                dispatch(productDataAction.updateData(newProductData))
-            }
+        if (selectedCategories.length > 0) {
+            fetchAndUpdateData(selectedCategories);
+        } else {
+            fetchAllCategories();
         }
-        getDataByCategory()
+    }, [selectItems]);
 
-    }, [selectedArr])
-
-
-    const onChangeHandler = (elm, idx) => {
-        if (selectItem[idx].selected) {
-            let newArr = [...selectItem]
-            newArr[idx] = { ...newArr[idx], ...{ selected: false } }
-            setSelectItem(newArr)
+    const fetchAllCategories = async () => {
+        try {
+            const { data } = await axios.get("https://fakestoreapi.com/products");
+            dispatch(productDataAction.updateData(data));
+        } catch (error) {
+            console.error('Error fetching all categories:', error);
         }
-        else {
-            let newArr = [...selectItem]
-            newArr[idx] = { ...newArr[idx], ...{ selected: true } }
-            setSelectItem(newArr)
+    };
+
+    const fetchAndUpdateData = async (categories) => {
+        try {
+            const requests = categories.map(category => 
+                axios.get(`https://fakestoreapi.com/products/category/${category}`)
+            );
+            const responses = await Promise.all(requests);
+            const newProductData = responses.flatMap(response => response.data);
+
+            dispatch(productDataAction.updateData(newProductData));
+        } catch (error) {
+            console.error('Error fetching selected categories data:', error);
         }
-    }
+    };
 
-    const arrowClickHandler = () => {
-        setArrowDown((state) => !state)
-    }
+    const handleCheckboxChange = (index) => {
+        setSelectItems(prevItems => {
+            const newItems = [...prevItems];
+            newItems[index] = { ...newItems[index], selected: !newItems[index].selected };
+            return newItems;
+        });
+    };
 
-    return <div className="row" >
-        <div className="row-top">
-            <span>{item.toUpperCase()}</span>
-            {
-                arrowDown ? <img className="arrow-down" src={arrowLeft} alt="icon" onClick={arrowClickHandler} /> :
-                    <img className="arrow-up" src={arrowLeft} alt="icon" onClick={arrowClickHandler} />
-            }
+    const toggleArrow = () => {
+        setIsArrowDown(prev => !prev);
+    };
+
+    const handleUnselectAll = () => {
+        setSelectItems(prevItems => prevItems.map(item => ({ ...item, selected: false })));
+        fetchAllCategories();
+    };
+
+    return (
+        <div className="row">
+            <div className="row-top">
+                <span>{item.toUpperCase()}</span>
+                <img
+                    className={isArrowDown ? "arrow-down" : "arrow-up"}
+                    src={arrowLeft}
+                    alt="Toggle"
+                    onClick={toggleArrow}
+                />
+            </div>
+            {!isArrowDown && (
+                <div className="row-bottom">
+                    <span>All</span>
+                    <div className="row-select">
+                        <span onClick={handleUnselectAll}>Unselect all</span>
+                        {selectItems.map((item, idx) => (
+                            <div className="checkbox" key={idx}>
+                                <input
+                                    type="checkbox"
+                                    checked={item.selected}
+                                    onChange={() => handleCheckboxChange(idx)}
+                                />
+                                <span>{item.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
-        <div className="row-bottom">
-            <span>All</span>
-            {
-                !arrowDown ? <div className="row-select">
-                    <span onClick={unselectHandler}>Unselect all</span>
-                    {
-                        selectItem.map((elm, idx) => <div className="checkbox" key={idx}>
-                            <input onChange={() => { onChangeHandler(elm, idx) }} checked={elm.selected} type="checkbox" />
-                            <span>{elm.name}</span>
-
-
-                        </div>)
-                    }
-                </div> : null
-            }
-
-        </div>
-    </div>
+    );
 }

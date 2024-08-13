@@ -1,124 +1,120 @@
-.categoryBar{
-    padding: 5px 10px;
-    height: 60px;
+.categoryBar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: relative;
+    padding: 5px 10px;
+    height: 60px;
     border: 1px solid #E5E5E5;
     border-left: none;
-    border-right:none ;
+    border-right: none;
+    position: relative;
+    background-color: #fff;
 }
 
-.categoryBar select:focus{
- outline: none;
-}
-.categoryBar select option{
-    padding: 50px 5px;
+.itemCount {
+    display: none;
+    font-weight: 700;
 }
 
-.show img{
-    rotate: 180deg;
-}
-.show , .hide{
+.filterToggle {
     cursor: pointer;
     position: absolute;
     left: 180px;
     text-decoration: underline;
     color: #888792;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    transition: left 0.3s ease;
 }
 
-.select-top{
-    display: flex;
-    gap: 5px;
-}
-.select-top >img:last-child{
-    width: 16px;
-    height: 16px;
-    rotate: -90deg;
-}
-.select-bottom{
-    padding: 25px 25px;
-    border: 1px solid #f3eeee;
-    display: flex;
-    right: 0;
-    top: 52px;
-    flex-direction: column;
-    align-items: end;
-    gap: 35px;
-    position: absolute;
-    background-color: #fff;
-    box-shadow: 0px 0px 8px #aea9a9;
-    z-index: 99999;
+.filterToggle img {
+    transition: transform 0.3s;
 }
 
-.bold{
+.filterToggle.show img {
+    transform: rotate(180deg);
+}
+
+.selectContainer {
+    position: relative;
+}
+
+.selectHeader {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.selectedCategory {
     font-size: 1.1rem;
     font-weight: 700;
 }
-.normal{
+
+.selectDropdown {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    border: 1px solid #f3eeee;
+    background-color: #fff;
+    box-shadow: 0px 0px 8px #aea9a9;
+    z-index: 9999;
+}
+
+.categoryOption {
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
     font-weight: 300;
 }
 
+.categoryOption.active {
+    font-weight: 700;
+    background-color: #f0f0f0;
+}
 
-@media screen and (max-width:750px) {
-    .show , .hide{
+/* Responsive styles */
+
+/* Tablets and small desktops */
+@media screen and (max-width: 750px) {
+    .filterToggle {
         left: 120px;
     }
 }
-@media screen and (max-width:550px) {
-    .bold{
-        font-size: 1rem;
-        font-weight: 700;
-    }
-    .show img{
-        height: 12px;
-        width: 12px;
-    }
-     .hide img{
-        height: 12px;
-        width: 12px;
-    }
-    .show , .hide{
+
+/* Large phones and phablets */
+@media screen and (max-width: 550px) {
+    .filterToggle {
         left: 100px;
         font-size: 0.8rem;
     }
+    .filterToggle img {
+        height: 12px;
+        width: 12px;
+    }
 }
 
-@media screen and (max-width:480px){
-    .show , .hide{
-        display: block;
-        position: relative;
-        left: 0px;
-        font-size: 14px;
-        font-weight: 700;
+/* Small phones */
+@media screen and (max-width: 480px) {
+    .filterToggle {
+        left: 0;
+        font-size: 0.8rem;
         width: 50%;
-        height: 100%;
-        border-right: 1px solid #E5E5E5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: black;
-        text-decoration: none;
+        text-align: center;
     }
-
-    .select{
+    .selectContainer {
         width: 50%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0;
-
     }
-    .select-top >span:first-child{
-        font-size: 12px;
-    }
-
 }
 
-@media screen and (max-width:343px){
-    .show , .hide{
-        font-size: 12px;
+/* Extra small phones */
+@media screen and (max-width: 343px) {
+    .filterToggle {
+        font-size: 0.7rem;
     }
 }
